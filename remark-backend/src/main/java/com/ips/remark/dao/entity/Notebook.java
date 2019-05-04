@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "notebook")
 public class Notebook {
     @Id
     private UUID id;
+
+    @Column(length = 255)
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notebook", cascade = CascadeType.ALL)

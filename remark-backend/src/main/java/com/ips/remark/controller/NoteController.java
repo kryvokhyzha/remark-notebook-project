@@ -90,6 +90,7 @@ public class NoteController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
+        System.out.println("\n\n\n\n\n\n" + "Note id: " + id + "\n\n\n\n\n\n");
         this.noteRepository.deleteById(UUID.fromString(id));
     }
 }

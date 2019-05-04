@@ -12,15 +12,21 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@Table(name = "note")
 public class Note {
     @Id
     private UUID id;
+
+    @Column()
     private String title;
+
+    @Column(length = 4096)
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Notebook notebook;
 
+    @Temporal(TemporalType.DATE)
     private Date lastModifiedOn;
 
     protected Note() {
