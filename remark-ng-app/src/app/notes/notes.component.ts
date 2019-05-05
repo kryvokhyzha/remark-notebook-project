@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Notebook} from './model/notebook';
-import {Note} from './model/Note';
-import {ApiService} from '../shared/api.service';
+import { Notebook } from './model/notebook';
+import { Note } from './model/Note';
+import { ApiService } from '../shared/api.service';
 
 @Component({
   selector: 'app-notes',
@@ -27,7 +26,7 @@ export class NotesComponent implements OnInit {
         this.notebooks = res;
       },
       err => {
-        alert('Error');
+        alert('Error: getAllNotebooks() function');
       }
     );
   }
@@ -38,7 +37,7 @@ export class NotesComponent implements OnInit {
         this.notes = res;
       },
       err => {
-        alert('Error');
+        alert('Error: getAllNotes() function');
       }
     );
   }
@@ -56,7 +55,7 @@ export class NotesComponent implements OnInit {
         this.notebooks.push(newNotebook);
       },
       err => {
-        alert('Error');
+        alert('Error: createNotebook() function');
       }
     );
   }
@@ -66,7 +65,7 @@ export class NotesComponent implements OnInit {
       res => {
       },
       err => {
-        alert('Error');
+        alert('Error: updateNotebook(updatedNotebook: Notebook) function');
       }
     );
   }
@@ -77,7 +76,7 @@ export class NotesComponent implements OnInit {
         res => {
           const indexOfNotebook = this.notebooks.indexOf(deletedNotebook);
           this.notebooks.splice(indexOfNotebook, 1);
-          if (this.notebooks.length > indexOfNotebook) {
+          if (this.notebooks.length > indexOfNotebook && this.notebooks.length >= 0) {
             this.selectNotebook(this.notebooks[indexOfNotebook]);
           } else if (this.notebooks.length === indexOfNotebook && (indexOfNotebook - 1) >= 0 && this.notebooks.length >= 0) {
             this.selectNotebook(this.notebooks[indexOfNotebook - 1]);
@@ -86,7 +85,7 @@ export class NotesComponent implements OnInit {
           }
         },
         err => {
-          alert('Error');
+          alert('Error: deleteNotebook(deletedNotebook: Notebook) function');
         }
       );
       this.selectedNotebook = null;
@@ -101,7 +100,7 @@ export class NotesComponent implements OnInit {
           this.notes.splice(indexOfNote, 1);
         },
         err => {
-          alert('Error');
+          alert('Error: deleteNote(note: Note) function');
         }
       );
     }
@@ -122,7 +121,7 @@ export class NotesComponent implements OnInit {
         this.notes.push(newNote);
       },
       err => {
-        alert('Error');
+        alert('Error: createNote(nbId: string) function');
       }
     );
   }
@@ -138,7 +137,7 @@ export class NotesComponent implements OnInit {
           this.notes = res;
         },
         err => {
-          alert('Error');
+          alert('Error: selectNotebook(notebook: Notebook) function');
         }
       );
     }
@@ -149,7 +148,7 @@ export class NotesComponent implements OnInit {
       res => {
       },
       err => {
-        alert('Error');
+        alert('Error: updateNote(updatedNote: Note) function');
       }
     );
   }

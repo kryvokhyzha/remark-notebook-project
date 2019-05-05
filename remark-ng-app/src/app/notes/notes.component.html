@@ -50,7 +50,12 @@
           <!-- Message if there are no notes -->
           <h3 *ngIf="selectedNotebook != null">{{ selectedNotebook.name }}</h3>
           <h3 *ngIf="selectedNotebook == null">All notes</h3>
-          <p *ngIf="this.notes.length === 0" class="text-danger">-There are no notes to display in the notebook :(</p>
+          <div class="alert alert-danger"
+               role="alert"
+               style="width: 50%;"
+               *ngIf="this.notes.length === 0">
+            <p>-There are no notes to display in the notebook :(</p>
+          </div>
         </div>
       </div>
       <div class="row">

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Notebook} from '../notes/model/notebook';
-import {Note} from '../notes/model/note';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Notebook } from '../notes/model/notebook';
+import { Note } from '../notes/model/note';
 
 @Injectable({
   providedIn: 'root'
