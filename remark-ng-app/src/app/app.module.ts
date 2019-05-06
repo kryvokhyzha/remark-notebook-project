@@ -10,7 +10,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { Router, RouterModule, Routes } from '@angular/router';
 
 import { HttpClientModule } from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import { FormsModule} from '@angular/forms';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 const appRoutes: Routes = [
   {
@@ -18,9 +19,13 @@ const appRoutes: Routes = [
     component: NotesComponent
   },
   {
+    path: 'feedback',
+    component: FeedbackComponent
+  },
+  {
     path: '',
     component: NotesComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: '**',
@@ -32,15 +37,17 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     NavigationComponent,
+    FeedbackComponent,
     NotesComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    FeedbackComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     AppRoutingModule,
-    RouterModule.forRoot(appRoutes, {enableTracing: true}),
-    FormsModule
+    RouterModule.forRoot(appRoutes, {enableTracing: true})
   ],
   providers: [],
   bootstrap: [AppComponent]
