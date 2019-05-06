@@ -29,5 +29,5 @@ HELP.md
 .vscode/
 
 node_modules
-remark-backend/remark.db.mv.db
 *.db
+*.orig
