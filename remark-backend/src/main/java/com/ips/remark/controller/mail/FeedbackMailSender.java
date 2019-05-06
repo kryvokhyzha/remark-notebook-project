@@ -21,7 +21,7 @@ public class FeedbackMailSender implements FeedbackSender {
     @Override
     public void sendFeedback(String from, String name, String feedback){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("feedback@noteit.com");
+        message.setTo("remarkapplication@gmail.com");
         message.setSubject("New feedback from " + name);
         message.setText(feedback);
         message.setFrom(from);

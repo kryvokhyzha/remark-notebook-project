@@ -20,14 +20,14 @@ export class FeedbackComponent implements OnInit {
   }
   sendFeedback(): void {
     const url = 'http://localhost:8081/api/feedback';
-    /*this.http.post(url, this.model).subscribe(
+    this.http.post(url, this.model).subscribe(
       res => {
         location.reload();
       },
       err => {
         alert('An error has occurred while sending feedback');
       }
-    );*/
+    );
   }
 }
 export interface FeedbackViewModel {
