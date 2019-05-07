@@ -12,6 +12,7 @@ import { Router, RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { LoginComponent } from './login/login.component';
 
 const appRoutes: Routes = [
   {
@@ -28,6 +29,10 @@ const appRoutes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
     path: '**',
     component: NotFoundComponent
   }
@@ -40,7 +45,8 @@ const appRoutes: Routes = [
     FeedbackComponent,
     NotesComponent,
     NotFoundComponent,
-    FeedbackComponent
+    FeedbackComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
