@@ -13,7 +13,7 @@ public class Notebook {
     @Id
     private UUID id;
 
-    @Column(length = 255)
+    @Column()
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "notebook", cascade = CascadeType.ALL)

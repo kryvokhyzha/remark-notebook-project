@@ -1,13 +1,6 @@
 package com.ips.remark.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,23 +19,27 @@ public class Note {
     @ManyToOne(fetch = FetchType.LAZY)
     private Notebook notebook;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedOn;
+
+    @Column()
+    private boolean favorite;
 
     protected Note() {
         this.id = UUID.randomUUID();
         this.lastModifiedOn = new Date();
     }
 
-    public Note(String title, String text, Notebook notebook) {
+    public Note(String title, String text, Notebook notebook, boolean favorite) {
         this();
         this.title = title;
         this.text = text;
         this.notebook = notebook;
+        this.favorite = favorite;
     }
 
-    public Note(String id, String title, String text, Notebook notebook) {
-        this(title, text, notebook);
+    public Note(String id, String title, String text, Notebook notebook, boolean Favorite) {
+        this(title, text, notebook, Favorite);
         if (id != null) {
             this.id = UUID.fromString(id);
         }
@@ -75,5 +72,13 @@ public class Note {
 
     public void setLastModifiedOn(Date lastModifiedOn) {
         this.lastModifiedOn = lastModifiedOn;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

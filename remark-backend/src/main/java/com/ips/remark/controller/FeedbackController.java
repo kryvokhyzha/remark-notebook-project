@@ -8,10 +8,7 @@ import com.ips.remark.controller.mail.*;
 
 import javax.validation.ValidationException;
 
-/*
-Requests can be tested using the built in HTTP Rest Client. Use the
-examples found in 'noteit.http' file.
- */
+
 
 @RestController
 @RequestMapping("/api/feedback")

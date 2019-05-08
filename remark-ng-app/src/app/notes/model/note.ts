@@ -4,4 +4,5 @@ export interface Note {
   text: string;
   notebookId: string;
   lastModifiedOn: string;
+  favorite: boolean;
 }

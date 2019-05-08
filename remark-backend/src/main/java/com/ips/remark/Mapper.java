@@ -1,14 +1,5 @@
 package com.ips.remark;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.springframework.stereotype.Component;
 import com.ips.remark.controller.viewModel.NoteViewModel;
 import com.ips.remark.controller.viewModel.NotebookViewModel;
@@ -16,10 +7,6 @@ import com.ips.remark.dao.repository.NotebookRepository;
 import com.ips.remark.dao.entity.Note;
 import com.ips.remark.dao.entity.Notebook;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
@@ -47,13 +34,14 @@ public class Mapper {
         viewModel.setLastModifiedOn(entity.getLastModifiedOn());
         viewModel.setText(entity.getText());
         viewModel.setNotebookId(entity.getNotebook().getId().toString());
+        viewModel.setFavorite(entity.isFavorite());
 
         return viewModel;
     }
 
     public Note convertToNoteEntity(NoteViewModel viewModel) {
         Notebook notebook = this.notebookRepository.findById(UUID.fromString(viewModel.getNotebookId())).get();
-        Note entity = new Note(viewModel.getId(), viewModel.getTitle(), viewModel.getText(), notebook);
+        Note entity = new Note(viewModel.getId(), viewModel.getTitle(), viewModel.getText(), notebook, viewModel.isFavorite());
 
         return entity;
     }

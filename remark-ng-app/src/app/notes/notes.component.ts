@@ -12,6 +12,8 @@ export class NotesComponent implements OnInit {
   notebooks: Notebook[] = [];
   notes: Note[] = [];
   selectedNotebook: Notebook;
+  searchStr = '';
+  state = 'All notes';
 
   constructor(private apiService: ApiService) { }
 
@@ -35,6 +37,23 @@ export class NotesComponent implements OnInit {
     this.apiService.getAllNotes().subscribe(
       res => {
         this.notes = res;
+      },
+      err => {
+        alert('Error: getAllNotes() function');
+      }
+    );
+  }
+
+  public getFavoriteNotes() {
+    this.apiService.getAllNotes().subscribe(
+      res => {
+        if (res.length !== 0) {
+          this.notes = res.filter(note => {
+            return note.favorite;
+          });
+        } else {
+          this.notes = [];
+        }
       },
       err => {
         alert('Error: getAllNotes() function');
@@ -112,12 +131,14 @@ export class NotesComponent implements OnInit {
       title: 'New Note',
       text: 'Write some text in here',
       lastModifiedOn: null,
-      notebookId: nbId
+      notebookId: nbId,
+      favorite: false
     };
 
     this.apiService.saveNote(newNote).subscribe(
       res => {
         newNote.id = res.id;
+        newNote.lastModifiedOn = res.lastModifiedOn;
         this.notes.push(newNote);
       },
       err => {
@@ -129,27 +150,46 @@ export class NotesComponent implements OnInit {
   selectNotebook(notebook: Notebook) {
     this.selectedNotebook = notebook;
 
-    if (this.selectedNotebook == null) {
-      this.getAllNotes();
+    if (notebook == null) {
+      this.selectAllNotebook();
     } else {
+      this.state = notebook.name;
       this.apiService.getNotesByNotebook(notebook.id).subscribe(
         res => {
           this.notes = res;
         },
         err => {
           alert('Error: selectNotebook(notebook: Notebook) function');
-        }
-      );
+        });
     }
   }
 
   updateNote(updatedNote: Note) {
     this.apiService.saveNote(updatedNote).subscribe(
       res => {
+        const idx = this.notes.indexOf(updatedNote);
+        this.notes[idx].lastModifiedOn = res.lastModifiedOn;
       },
       err => {
         alert('Error: updateNote(updatedNote: Note) function');
       }
     );
+  }
+
+  setFavorite(note: Note) {
+    note.favorite = !note.favorite;
+    this.updateNote(note);
+  }
+
+  selectAllNotebook() {
+    this.selectedNotebook = null;
+    this.state = 'All notes';
+    this.getAllNotes();
+  }
+
+  selectFavNotesNotebook() {
+    this.selectedNotebook = null;
+    this.state = 'Favorite notes';
+    this.getFavoriteNotes();
   }
 }
