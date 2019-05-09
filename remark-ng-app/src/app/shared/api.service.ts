@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Notebook } from '../notes/model/notebook';
 import { Note } from '../notes/model/note';
+import {UserModel} from '../../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +18,13 @@ export class ApiService {
   private SAVE_UPDATE_NOTE_URL = `${this.BASE_URL}\\notes`;
   private DELETE_NOTE_URL = `${this.BASE_URL}\\notes\\`;
   private NOTE_BY_ID_URL = `${this.BASE_URL}\\byId\\`;
+  private CREATE_USER_URL = `${this.BASE_URL}\\user\\create`;
 
   constructor(private http: HttpClient) {
 
+  }
+  postUser(user: UserModel): Observable<UserModel> {
+    return this.http.post<UserModel>(this.CREATE_USER_URL, user);
   }
   getAllNotebooks(): Observable<Notebook[]> {
     return this.http.get<Notebook[]>(this.ALL_NOTEBOOKS_URL);
