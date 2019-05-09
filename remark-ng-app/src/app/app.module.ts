@@ -14,6 +14,7 @@ import { FormsModule} from '@angular/forms';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { SearchPipe } from './search.pipe';
 import { NoteComponent } from './notes/note/note.component';
+import { NotebookComponent } from './notes/notebook/notebook.component';
 
 const appRoutes: Routes = [
   {
@@ -44,7 +45,8 @@ const appRoutes: Routes = [
     NotFoundComponent,
     FeedbackComponent,
     SearchPipe,
-    NoteComponent
+    NoteComponent,
+    NotebookComponent
   ],
   imports: [
     BrowserModule,
