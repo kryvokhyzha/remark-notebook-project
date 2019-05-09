@@ -12,10 +12,10 @@ public class User {
     @Id
     private UUID Id;
 
-    @Column()
+    @Column(name="username")
     private String username;
 
-    @Column()
+    @Column(name="password")
     private  String password;
 
     public User() {

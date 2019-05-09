@@ -14,23 +14,35 @@ import { FormsModule} from '@angular/forms';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LoginComponent } from './login/login.component';
 
+import { AuthGuard } from './security_redirect/loginRedirect';
+import { IsAuthGuard } from './security_redirect/isLoginRedirect';
+import { RegistrationComponent } from './registration/registration.component';
+
 const appRoutes: Routes = [
   {
     path: 'notes',
-    component: NotesComponent
+    component: NotesComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'feedback',
-    component: FeedbackComponent
+    component: FeedbackComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '',
     component: NotesComponent,
     pathMatch: 'full',
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [IsAuthGuard]
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent,
   },
   {
     path: '**',
@@ -47,6 +59,7 @@ const appRoutes: Routes = [
     NotFoundComponent,
     FeedbackComponent,
     LoginComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,

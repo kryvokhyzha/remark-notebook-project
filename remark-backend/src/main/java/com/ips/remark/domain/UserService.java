@@ -18,7 +18,7 @@ public class UserService {
     public void User(UserViewModel userViewModel) throws Exception
     {
         boolean isExists = isExistsUser(userViewModel.getUsername());
-        if(isExists)throw new OperationNotSupportedException("This username is already used by someone.");
+        if(isExists) throw new OperationNotSupportedException("This username is already used by someone.");
 
         boolean newUser = createUser(userViewModel);
         if(!newUser) throw new OperationNotSupportedException("Some troubles occurred.");
@@ -26,11 +26,11 @@ public class UserService {
 
     private boolean createUser(UserViewModel userViewModel)
     {
-        User user=new User();
+        User user = new User();
 
         user.setUsername(userViewModel.getUsername());
         user.setPassword(userViewModel.getPassword());
-        user=userRepository.saveAndFlush(user);
+        user = userRepository.saveAndFlush(user);
 
         return (user.getId()!=null);
     }

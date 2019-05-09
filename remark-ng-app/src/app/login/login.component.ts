@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { first } from 'rxjs/operators/';
 
 import { AuthenticationService } from '../authentication/authentication.component';
+import {UserModel} from '../../models/user';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +11,11 @@ import { AuthenticationService } from '../authentication/authentication.componen
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  public currentUser: UserModel = {
+    id: null,
+    username: '',
+    password: ''
+  }
   private username = '';
   private password = '';
   public error = '';
@@ -22,7 +28,8 @@ export class LoginComponent {
           console.log(adminData);
           this.error = adminData.message;
         } else {
-          this.router.navigate(['user']);
+          this.currentUser = adminData;
+          this.router.navigate(['notes']);
           this.error = '';
         }
       }

@@ -1,16 +1,22 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, first } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 
 import { User } from '../shared/user.service';
+import {UserModel} from '../../models/user';
+import {ApiService} from '../shared/api.service';
+import {Note} from '../notes/model/note';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService {
+export class AuthenticationService implements OnInit {
+  user: UserModel[] = [];
   private currentAdminSubject: BehaviorSubject<User>;
   public currentAdmin: Observable<User>;
-
-  constructor(private http: HttpClient) {
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+  constructor(private http: HttpClient, private apiService: ApiService ) {
     this.currentAdminSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
     this.currentAdmin = this.currentAdminSubject.asObservable();
   }
@@ -41,7 +47,6 @@ export class AuthenticationService {
     localStorage.removeItem('user');
     this.currentAdminSubject.next(null);
   }
-
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
