@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -34,11 +33,13 @@ public class UserService {
 
         return (user.getId()!=null);
     }
+
     private boolean isExistsUser(String username)
     {
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
     }
+
     public User getUserByUsername(String username)
     {
         Optional<User> user = userRepository.findByUsername(username);

@@ -2,31 +2,28 @@ import {Injectable, OnInit} from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, first } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-
-import { User } from '../shared/user.service';
-import {UserModel} from '../../models/user';
+import {UserModel} from '../models/user';
 import {ApiService} from '../shared/api.service';
-import {Note} from '../notes/model/note';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnInit {
   user: UserModel[] = [];
-  private currentAdminSubject: BehaviorSubject<User>;
-  public currentAdmin: Observable<User>;
+  private currentUserSubject: BehaviorSubject<UserModel>;
+  public currentUser: Observable<UserModel>;
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
   constructor(private http: HttpClient, private apiService: ApiService ) {
-    this.currentAdminSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('user')));
-    this.currentAdmin = this.currentAdminSubject.asObservable();
+    this.currentUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('user')));
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  public get currentUserValue(): User {
-    return this.currentAdminSubject.value;
+  public get currentUserValue(): UserModel {
+    return this.currentUserSubject.value;
   }
 
   login(username: string, password: string): Observable<any> {
-    return this.http.get<User>(`http://localhost:8081/api/user/byUsername/${username}`)
+   /* return this.http.get<User>(`http://localhost:8081/api/user/byUsername/${username}`)
       .pipe(first())
       .pipe(catchError(this.handleError))
       .pipe(map(res => {
@@ -39,13 +36,27 @@ export class AuthenticationService implements OnInit {
       } else if (res.password !== password) {
         return new Error('Invalid password!');
       }
-    }));
+    }));*/
+    return this.apiService.getUserByUsername(username)
+      .pipe(first())
+      .pipe(catchError(this.handleError))
+      .pipe(map(res => {
+        if (res && res.password === password) {
+          localStorage.setItem('user', JSON.stringify(res));
+          this.currentUserSubject.next(res);
+          return res;
+        } else if (!res) {
+          return new Error('Invalid username!');
+        } else if (res.password !== password) {
+          return new Error('Invalid password!');
+        }
+      }));
   }
 
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
-    this.currentAdminSubject.next(null);
+    this.currentUserSubject.next(null);
   }
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

@@ -23,7 +23,25 @@
               style="margin-left:12px;"><i class="fa fa-plus"></i> New note
       </button>
     </div>
+  </div>
 
+  <!-- Share menu -->
+  <div class="row" style="margin-top:12px;">
+    <div class="col-md-8">
+      <input type="text"
+             class="form-control"
+             style="width: 100%;"
+             placeholder="Search user by username to share..."
+             [(ngModel)]="searchUsername"
+      >
+    </div>
+    <div class="col-md-4">
+      <button type="buton"
+              (click)="sharedWithUser()"
+              class="btn btn-info pull-right"
+              style="margin-left:12px;"><i class="fa fa-plus"></i> Shared "{{state}}" notebook
+      </button>
+    </div>
   </div>
 
   <!-- Note content -->

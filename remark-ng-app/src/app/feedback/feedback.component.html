@@ -16,7 +16,7 @@
                  [ngClass]="{ 'is-invalid': f.submitted && name.invalid}"
                  required
                  />
-          <div *ngIf="f.submitted && name.invalid">
+          <div *ngIf="f.submitted && name.invalid" class="invalid-input">
             <div *ngIf="name.errors?.required">Name is not valid</div>
           </div>
         </div>
@@ -33,7 +33,7 @@
                  [ngClass]="{ 'is-valid': f.submitted && email.invalid}"
                  required email
                  />
-          <div *ngIf="f.submitted && email.invalid">
+          <div *ngIf="f.submitted && email.invalid" class="invalid-input">
             <div *ngIf="email.errors?.required">Field is required</div>
             <div *ngIf="email.errors?.email">Is not valid email</div>
           </div>
@@ -54,7 +54,7 @@
             required minlength="10"
             >
 			    </textarea>
-          <div *ngIf="f.submitted && feedback.invalid">
+          <div *ngIf="f.submitted && feedback.invalid" class="invalid-input">
             <div *ngIf="feedback.errors?.required">Field is required</div>
             <div *ngIf="feedback.errors?.minlength">Feedback must contain 10 characters or more</div>
           </div>

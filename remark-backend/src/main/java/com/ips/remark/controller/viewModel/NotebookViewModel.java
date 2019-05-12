@@ -8,6 +8,9 @@ public class NotebookViewModel {
     @NotNull
     private String name;
 
+    @NotNull
+    private String userId;
+
     private int nbNotes;
 
     public String getId() {
@@ -32,5 +35,13 @@ public class NotebookViewModel {
 
     public void setNbNotes(int nbNotes) {
         this.nbNotes = nbNotes;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

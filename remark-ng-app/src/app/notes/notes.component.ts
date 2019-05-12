@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Notebook } from './model/notebook';
 import { Note } from './model/Note';
 import { ApiService } from '../shared/api.service';
+import { AuthenticationService } from '../authentication/authentication.component';
 
 @Component({
   selector: 'app-notes',
@@ -14,12 +15,16 @@ export class NotesComponent implements OnInit {
   selectedNotebook: Notebook;
   searchStr = '';
   state = 'All notes';
+  searchUsername: string;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService,
+              private authService: AuthenticationService) { }
 
   ngOnInit() {
-    this.getAllNotebooks();
-    this.getAllNotes();
+    // this.getAllNotebooks();
+    this.getAllNotebooksByUser();
+    this.getAllNotesByUser();
+    // this.getAllNotes();
   }
 
   public getAllNotebooks() {
@@ -33,6 +38,34 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  public getAllNotebooksByUser() {
+    this.apiService.getNotebooksByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notebooks = res;
+      },
+      err => {
+        alert('Error: getAllNotebooksByUser() function');
+      }
+    );
+  }
+
+  public getAllNotesByUser() {
+    this.getAllNotebooksByUser();
+    this.notes = [];
+    for (const notebook of this.notebooks) {
+      this.apiService.getNotesByNotebook(notebook.id).subscribe(
+        res => {
+          res.forEach(nt => {
+            this.notes.push(nt);
+          });
+        },
+        err => {
+          alert('Error: getAllNotesByUser() function');
+        }
+      );
+    }
+  }
+
   public getAllNotes() {
     this.apiService.getAllNotes().subscribe(
       res => {
@@ -42,6 +75,30 @@ export class NotesComponent implements OnInit {
         alert('Error: getAllNotes() function');
       }
     );
+  }
+
+  public getAllFavoriteNotes() {
+    this.getAllNotebooksByUser();
+    this.notes = [];
+    for (const notebook of this.notebooks) {
+      this.apiService.getNotesByNotebook(notebook.id).subscribe(
+        res => {
+          res.forEach(nt => {
+            this.notes.push(nt);
+          });
+          if (res.length !== 0) {
+            this.notes = res.filter(note => {
+              return note.favorite;
+            });
+          } else {
+            this.notes = [];
+          }
+        },
+        err => {
+          alert('Error: getAllNotesByUser() function');
+        }
+      );
+    }
   }
 
   public getFavoriteNotes() {
@@ -65,6 +122,7 @@ export class NotesComponent implements OnInit {
     const newNotebook: Notebook = {
       name: 'New notebook',
       id: null,
+      userId: this.authService.currentUserValue.id,
       nbOfNotes: 0
     };
 
@@ -184,12 +242,18 @@ export class NotesComponent implements OnInit {
   selectAllNotebook() {
     this.selectedNotebook = null;
     this.state = 'All notes';
-    this.getAllNotes();
+    this.getAllNotesByUser();
+    // this.getAllNotes();
   }
 
   selectFavNotesNotebook() {
     this.selectedNotebook = null;
     this.state = 'Favorite notes';
-    this.getFavoriteNotes();
+    this.getAllFavoriteNotes();
+    // this.getFavoriteNotes();
+  }
+
+  sharedWithUser() {
+    // TODO: this parasha
   }
 }

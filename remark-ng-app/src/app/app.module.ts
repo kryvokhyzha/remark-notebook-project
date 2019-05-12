@@ -65,7 +65,7 @@ const appRoutes: Routes = [
     RegistrationComponent,
     SearchPipe,
     NoteComponent,
-    NotebookComponent
+    NotebookComponent,
   ],
   imports: [
     BrowserModule,

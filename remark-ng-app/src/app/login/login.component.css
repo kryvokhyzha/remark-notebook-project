@@ -260,3 +260,8 @@ input[type=text]:placeholder {
 #icon {
   width:60%;
 }
+
+.invalid-input{
+  color: red;
+}
+

@@ -20,6 +20,8 @@ public class Notebook {
     @JsonIgnore
     private List<Note> notes;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     protected Notebook() {
         this.id = UUID.randomUUID();
@@ -31,12 +33,13 @@ public class Notebook {
         this.name = name;
     }
 
-    public Notebook(String id, String name) {
+    public Notebook(String id, String name, User user) {
         this();
         if (id != null) {
             this.id = UUID.fromString(id);
         }
         this.name = name;
+        this.user = user;
     }
 
 
@@ -54,6 +57,14 @@ public class Notebook {
 
     public int getNbOfNotes() {
         return this.notes.size();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getUserId() {
+        return this.user.getId().toString();
     }
 
 }

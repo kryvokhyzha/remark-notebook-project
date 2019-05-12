@@ -8,10 +8,10 @@ import {Router} from '@angular/router';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
-
   constructor(
               private router: Router,
-              private authService: AuthenticationService) {}
+              private authService: AuthenticationService) {
+  }
 
 
   ngOnInit() {
@@ -27,5 +27,9 @@ export class NavigationComponent implements OnInit {
     if (checkUser) {
       return true;
     }
+  }
+
+  getUserUsername() {
+    return this.authService.currentUserValue.username;
   }
 }

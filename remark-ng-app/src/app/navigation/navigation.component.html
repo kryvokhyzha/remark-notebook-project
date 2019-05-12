@@ -12,17 +12,19 @@
       <li class="nav-item active" *ngIf="checkAuthorized()">
         <a class="nav-link" routerLink="/notes">Notes </a>
       </li>
-      <li>
-        <a *ngIf="!checkAuthorized()" class = "nav-link pull-right" routerLink="/registration" >Registration</a>
+      <li *ngIf="checkAuthorized()">
+      <a class = "nav-link" routerLink="/feedback">Feedback</a>
       </li>
-      <li>
-      <a class = "nav-link" routerLink="/feedback" *ngIf="checkAuthorized()">Feedback</a>
+    </ul>
+    <ul class="navbar-nav pull-right">
+      <li *ngIf="!checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/registration" >Registration</a>
       </li>
-      <li>
-        <a *ngIf="!checkAuthorized()" class = "nav-link pull-right" routerLink="/login" >Login</a>
+      <li *ngIf="!checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/login" >Login</a>
       </li>
-      <li>
-        <a *ngIf="checkAuthorized()" class = "nav-link pull-right" routerLink="/login" (click)="logout()">Logout</a>
+      <li *ngIf="checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/login" (click)="logout()">Logout from {{ getUserUsername() }}</a>
       </li>
     </ul>
   </div>

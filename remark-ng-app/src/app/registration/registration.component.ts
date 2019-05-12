@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../authentication/authentication.component';
 import {first} from 'rxjs/operators';
-import {UserModel} from '../../models/user';
+import {UserModel} from '../models/user';
 import {ApiService} from '../shared/api.service';
 
 
@@ -14,7 +14,10 @@ import {ApiService} from '../shared/api.service';
 export class RegistrationComponent implements OnInit {
   private username = '';
   private password = '';
+  private passwordConfirm = '';
   public error = '';
+  private firstChange = false;
+  private secondChange = false;
   constructor(private router: Router, private authService: AuthenticationService, private apiService: ApiService) { }
 
   ngOnInit() {
@@ -33,5 +36,19 @@ export class RegistrationComponent implements OnInit {
         alert('Error: createUser(username: string, password: string) function');
       }
     );
+  }
+  checkPasswordConfirm() {
+    if (this.password !== this.passwordConfirm) {
+       return false;
+    }
+    return true;
+  }
+
+  checkChangeFirst() {
+    this.firstChange = true;
+  }
+
+  checkChangeSecond() {
+    this.secondChange = true;
   }
 }

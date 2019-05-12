@@ -47,7 +47,6 @@ public class NoteViewModel {
         this.text = text;
     }
 
-
     public String getNotebookId() {
         return notebookId;
     }
