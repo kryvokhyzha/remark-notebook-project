@@ -3,6 +3,10 @@ import { Notebook } from './model/notebook';
 import { Note } from './model/Note';
 import { ApiService } from '../shared/api.service';
 import { AuthenticationService } from '../authentication/authentication.component';
+import {catchError, first, map} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {UserModel} from '../models/user';
 
 @Component({
   selector: 'app-notes',
@@ -16,28 +20,22 @@ export class NotesComponent implements OnInit {
   searchStr = '';
   state = 'All notes';
   searchUsername: string;
+  private shareUserSubject: BehaviorSubject<UserModel>;
+  public shareUser: Observable<UserModel>;
 
   constructor(private apiService: ApiService,
-              private authService: AuthenticationService) { }
+              private authService: AuthenticationService) {
+    this.shareUserSubject = new BehaviorSubject<UserModel>(JSON.parse(localStorage.getItem('user')));
+    this.shareUser = this.shareUserSubject.asObservable();
+  }
+  public get shareUserValue(): UserModel {
+    return this.shareUserSubject.value;
+  }
 
   ngOnInit() {
-    // this.getAllNotebooks();
     this.getAllNotebooksByUser();
     this.getAllNotesByUser();
-    // this.getAllNotes();
   }
-
-  public getAllNotebooks() {
-    this.apiService.getAllNotebooks().subscribe(
-      res => {
-        this.notebooks = res;
-      },
-      err => {
-        alert('Error: getAllNotebooks() function');
-      }
-    );
-  }
-
   public getAllNotebooksByUser() {
     this.apiService.getNotebooksByUser(this.authService.currentUserValue.id).subscribe(
       res => {
@@ -48,7 +46,6 @@ export class NotesComponent implements OnInit {
       }
     );
   }
-
   public getAllNotesByUser() {
     this.getAllNotebooksByUser();
     this.notes = [];
@@ -65,18 +62,6 @@ export class NotesComponent implements OnInit {
       );
     }
   }
-
-  public getAllNotes() {
-    this.apiService.getAllNotes().subscribe(
-      res => {
-        this.notes = res;
-      },
-      err => {
-        alert('Error: getAllNotes() function');
-      }
-    );
-  }
-
   public getAllFavoriteNotes() {
     this.getAllNotebooksByUser();
     this.notes = [];
@@ -100,24 +85,6 @@ export class NotesComponent implements OnInit {
       );
     }
   }
-
-  public getFavoriteNotes() {
-    this.apiService.getAllNotes().subscribe(
-      res => {
-        if (res.length !== 0) {
-          this.notes = res.filter(note => {
-            return note.favorite;
-          });
-        } else {
-          this.notes = [];
-        }
-      },
-      err => {
-        alert('Error: getAllNotes() function');
-      }
-    );
-  }
-
   createNotebook() {
     const newNotebook: Notebook = {
       name: 'New notebook',
@@ -243,17 +210,119 @@ export class NotesComponent implements OnInit {
     this.selectedNotebook = null;
     this.state = 'All notes';
     this.getAllNotesByUser();
-    // this.getAllNotes();
   }
 
   selectFavNotesNotebook() {
     this.selectedNotebook = null;
     this.state = 'Favorite notes';
     this.getAllFavoriteNotes();
-    // this.getFavoriteNotes();
   }
+  public addNotesToUser() {
+    this.apiService.getNotesByNotebook(this.selectedNotebook.id).subscribe(
+      res => {
+        res.forEach(nt => {
+          this.notes.push(nt);
+        });
+      },
+      err => {
+        alert('Error: getAllNotesByUser() function');
+      }
+    );
+  }
+   public addNotebookToUser() {
+   const newNotebook: Notebook = {
+      name: this.selectedNotebook.name,
+      id: null,
+      userId: this.shareUserValue.id,
+      nbOfNotes: this.selectedNotebook.nbOfNotes
+    };
 
+   this.apiService.postNotebook(newNotebook).subscribe(
+      res => {
+        newNotebook.id = res.id;
+        this.getAllNotebooksByUser();
+        this.copyAllNotesByNoteBook(this.selectedNotebook.id, newNotebook.id);
+        this.getNotes();
+      },
+      err => {
+        alert('Error: addNotebookToUser() function');
+      }
+    );
+  }
+ public copyNote(nbId: string, titleVar: string, textVar: string, favoriteVar: boolean) {
+    const newNote: Note = {
+      id: null,
+      title: titleVar,
+      text: textVar,
+      lastModifiedOn: null,
+      notebookId: nbId,
+      favorite: favoriteVar
+    };
+    this.apiService.saveNote(newNote).subscribe(
+      res => {
+        newNote.id = res.id;
+        newNote.lastModifiedOn = res.lastModifiedOn;
+      },
+      err => {
+        alert('Error: createNote(nbId: string) function');
+      }
+    );
+  }
+  public getNotes() {
+    this.apiService.getNotesByNotebook(this.selectedNotebook.id).subscribe(
+      res => {
+        res.forEach(nt => {
+        });
+      },
+      err => {
+        alert('Error: getAllNotesByUser() function');
+      }
+    );
+  }
+  public copyAllNotesByNoteBook(nbId: string, nbIdNew: string) {
+    this.apiService.getNotesByNotebook(nbId).subscribe(
+      res => {
+        res.forEach(nt => {
+          this.copyNote(nbIdNew, nt.title, nt.text, nt.favorite);
+        });
+      },
+      err => {
+        alert('Error: getAllNotesByUser() function');
+      }
+    );
+  }
   sharedWithUser() {
-    // TODO: this parasha
+     this.apiService.getUserByUsername(this.searchUsername)
+      .pipe(first())
+      .pipe(catchError(this.handleError))
+      .pipe(map(res => {
+        if (!res) {
+          alert('There is no user with such username.');
+        } else {
+          if (this.authService.currentUserValue.username !== this.searchUsername) {
+          this.shareUserSubject.next(res);
+          if (this.shareUserValue) {
+            alert('There is a user with such username.');
+            this.addNotebookToUser();
+          }
+          }
+        }
+      }
+      )).subscribe(res => {
+     });
+  }
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      console.error(
+        `Backend returned code ${error.status}, ` +
+        `body was: ${error.error}`);
+    }
+    // return an observable with a user-facing error message
+    return throwError('Something bad happened; please try again later.');
   }
 }

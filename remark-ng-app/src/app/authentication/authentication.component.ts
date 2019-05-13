@@ -23,20 +23,6 @@ export class AuthenticationService implements OnInit {
   }
 
   login(username: string, password: string): Observable<any> {
-   /* return this.http.get<User>(`http://localhost:8081/api/user/byUsername/${username}`)
-      .pipe(first())
-      .pipe(catchError(this.handleError))
-      .pipe(map(res => {
-      if (res && res.password === password) {
-        localStorage.setItem('user', JSON.stringify(res));
-        this.currentAdminSubject.next(res);
-        return res;
-      } else if (!res) {
-        return new Error('Invalid username!');
-      } else if (res.password !== password) {
-        return new Error('Invalid password!');
-      }
-    }));*/
     return this.apiService.getUserByUsername(username)
       .pipe(first())
       .pipe(catchError(this.handleError))
