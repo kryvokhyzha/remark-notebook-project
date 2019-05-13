@@ -242,21 +242,20 @@ export class NotesComponent implements OnInit {
         newNotebook.id = res.id;
         this.getAllNotebooksByUser();
         this.copyAllNotesByNoteBook(this.selectedNotebook.id, newNotebook.id);
-        this.getNotes();
       },
       err => {
         alert('Error: addNotebookToUser() function');
       }
     );
   }
- public copyNote(nbId: string, titleVar: string, textVar: string, favoriteVar: boolean) {
+ public copyNote(nbId: string, titleVar: string, textVar: string) {
     const newNote: Note = {
       id: null,
       title: titleVar,
       text: textVar,
       lastModifiedOn: null,
       notebookId: nbId,
-      favorite: favoriteVar
+      favorite: false
     };
     this.apiService.saveNote(newNote).subscribe(
       res => {
@@ -268,22 +267,12 @@ export class NotesComponent implements OnInit {
       }
     );
   }
-  public getNotes() {
-    this.apiService.getNotesByNotebook(this.selectedNotebook.id).subscribe(
-      res => {
-        res.forEach(nt => {
-        });
-      },
-      err => {
-        alert('Error: getAllNotesByUser() function');
-      }
-    );
-  }
+
   public copyAllNotesByNoteBook(nbId: string, nbIdNew: string) {
     this.apiService.getNotesByNotebook(nbId).subscribe(
       res => {
         res.forEach(nt => {
-          this.copyNote(nbIdNew, nt.title, nt.text, nt.favorite);
+          this.copyNote(nbIdNew, nt.title, nt.text);
         });
       },
       err => {
