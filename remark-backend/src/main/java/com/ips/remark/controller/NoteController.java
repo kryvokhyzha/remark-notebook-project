@@ -35,6 +35,16 @@ public class NoteController {
         return noteService.byNotebook(notebookId);
     }
 
+    @GetMapping("/favoriteByUser/{id}")
+    public List<NoteViewModel> favoriteByUser(@PathVariable String id) {
+        return noteService.favoriteByUser(id);
+    }
+
+    @GetMapping("/byUser/{id}")
+    public List<NoteViewModel> allByUser(@PathVariable String id) {
+        return noteService.allByUser(id);
+    }
+
     @PostMapping
     public Note save(@RequestBody NoteViewModel noteCreateViewModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

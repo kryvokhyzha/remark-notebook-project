@@ -33,11 +33,13 @@
              style="width: 100%;"
              placeholder="Search user by username to share..."
              [(ngModel)]="searchUsername"
+             [disabled]="selectedNotebook == null"
       >
     </div>
     <div class="col-md-4">
       <button type="buton"
               (click)="sharedWithUser()"
+              [disabled]="selectedNotebook == null"
               class="btn btn-info pull-right"
               style="margin-left:12px;"><i class="fa fa-plus"></i> Shared "{{state}}" notebook
       </button>

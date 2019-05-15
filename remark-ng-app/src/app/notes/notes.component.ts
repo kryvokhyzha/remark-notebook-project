@@ -12,7 +12,7 @@ import { AuthenticationService } from '../authentication/authentication.componen
 export class NotesComponent implements OnInit {
   notebooks: Notebook[] = [];
   notes: Note[] = [];
-  selectedNotebook: Notebook;
+  selectedNotebook: Notebook = null;
   searchStr = '';
   state = 'All notes';
   searchUsername: string;
@@ -21,10 +21,8 @@ export class NotesComponent implements OnInit {
               private authService: AuthenticationService) { }
 
   ngOnInit() {
-    // this.getAllNotebooks();
     this.getAllNotebooksByUser();
     this.getAllNotesByUser();
-    // this.getAllNotes();
   }
 
   public getAllNotebooks() {
@@ -50,20 +48,15 @@ export class NotesComponent implements OnInit {
   }
 
   public getAllNotesByUser() {
-    this.getAllNotebooksByUser();
     this.notes = [];
-    for (const notebook of this.notebooks) {
-      this.apiService.getNotesByNotebook(notebook.id).subscribe(
-        res => {
-          res.forEach(nt => {
-            this.notes.push(nt);
-          });
-        },
-        err => {
-          alert('Error: getAllNotesByUser() function');
-        }
-      );
-    }
+    this.apiService.getNotesByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notes = res;
+      },
+      err => {
+        alert('Error: getAllNotesByUser() function');
+      }
+    );
   }
 
   public getAllNotes() {
@@ -78,27 +71,14 @@ export class NotesComponent implements OnInit {
   }
 
   public getAllFavoriteNotes() {
-    this.getAllNotebooksByUser();
-    this.notes = [];
-    for (const notebook of this.notebooks) {
-      this.apiService.getNotesByNotebook(notebook.id).subscribe(
-        res => {
-          res.forEach(nt => {
-            this.notes.push(nt);
-          });
-          if (res.length !== 0) {
-            this.notes = res.filter(note => {
-              return note.favorite;
-            });
-          } else {
-            this.notes = [];
-          }
-        },
-        err => {
-          alert('Error: getAllNotesByUser() function');
-        }
-      );
-    }
+    this.apiService.getFavoriteNotesByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notes = res;
+      },
+      err => {
+        alert('Error: getAllFavoriteNotes() function');
+      }
+    );
   }
 
   public getFavoriteNotes() {
@@ -254,6 +234,21 @@ export class NotesComponent implements OnInit {
   }
 
   sharedWithUser() {
-    // TODO: this parasha
+    this.apiService.getUserIsExist(this.searchUsername).subscribe(
+      res => {
+        if (res === true) {
+          this.apiService.postShareNotebook(this.searchUsername, this.selectedNotebook.id).subscribe(
+            resp => {
+            },
+            error => {
+              alert('Error: postShareNotebook() function ' + this.searchUsername + ' ' + this.selectedNotebook.id);
+            }
+          );
+        }
+      },
+      err => {
+        alert('Error: sharedWithUser() function');
+      }
+    );
   }
 }

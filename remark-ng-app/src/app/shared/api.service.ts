@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Notebook } from '../notes/model/notebook';
 import { Note } from '../notes/model/note';
 import {UserModel} from '../models/user';
+import {not} from 'rxjs/internal-compatibility';
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +20,42 @@ export class ApiService {
   private DELETE_NOTE_URL = `${this.BASE_URL}\\notes\\`;
   private NOTE_BY_ID_URL = `${this.BASE_URL}\\byId\\`;
   private CREATE_USER_URL = `${this.BASE_URL}\\user\\create`;
-  private USER_BY_USERNAME = `${this.BASE_URL}\\user\\byUsername\\`;
-  private NOTEBOOKS_BY_USER = `${this.BASE_URL}\\notebooks\\byUser\\`;
+  private USER_BY_USERNAME_URL = `${this.BASE_URL}\\user\\byUsername\\`;
+  private NOTEBOOKS_BY_USER_URL = `${this.BASE_URL}\\notebooks\\byUser\\`;
+  private NOTES_BY_USER_URL = `${this.BASE_URL}\\notes\\byUser\\`;
+  private FAVORITE_NOTES_BY_USER_URL = `${this.BASE_URL}\\notes\\favoriteByUser\\`;
+  private USER_IS_EXIST_URL = `${this.BASE_URL}\\user\\isExistUser\\`;
+  private SHARED_NOTEBOOK_URL = `${this.BASE_URL}\\notebooks\\share`;
 
   constructor(private http: HttpClient) {
   }
 
   getNotebooksByUser(userId: string): Observable<Notebook[]> {
-    return this.http.get<Notebook[]>(this.NOTEBOOKS_BY_USER + userId);
+    return this.http.get<Notebook[]>(this.NOTEBOOKS_BY_USER_URL + userId);
+  }
+
+  getNotesByUser(userId: string): Observable<Note[]> {
+    return this.http.get<Note[]>(this.NOTES_BY_USER_URL + userId);
+  }
+
+  getFavoriteNotesByUser(userId: string): Observable<Note[]> {
+    return this.http.get<Note[]>(this.FAVORITE_NOTES_BY_USER_URL + userId);
   }
 
   getUserByUsername(username: string): Observable<UserModel> {
-    return this.http.get<UserModel>(this.USER_BY_USERNAME + username);
+    return this.http.get<UserModel>(this.USER_BY_USERNAME_URL + username);
+  }
+
+  getUserIsExist(username: string): Observable<boolean> {
+    return this.http.get<boolean>(this.USER_IS_EXIST_URL + username);
   }
 
   postUser(user: UserModel): Observable<UserModel> {
     return this.http.post<UserModel>(this.CREATE_USER_URL, user);
+  }
+
+  postShareNotebook(username: string, notebookId: string): Observable<any> {
+    return this.http.post<any>(this.SHARED_NOTEBOOK_URL, {'username': username, 'notebookId': notebookId});
   }
 
   getAllNotebooks(): Observable<Notebook[]> {

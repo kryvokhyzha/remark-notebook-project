@@ -9,6 +9,7 @@ import com.ips.remark.dao.entity.Notebook;
 
 import javax.validation.ValidationException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -35,10 +36,14 @@ public class NotebookController {
             throw new ValidationException();
         }
 
-        System.out.println(notebookViewModel.getId());
-        System.out.println(notebookViewModel.getName());
-        System.out.println(notebookViewModel.getUserId());
         return notebookService.save(notebookViewModel);
+    }
+
+    @PostMapping("/share")
+    public void share(@RequestBody Map body) {
+        System.out.println("\n" + body.get("username"));
+        System.out.println("\n" + body.get("notebookId"));
+        notebookService.share(body.get("username").toString(), body.get("notebookId").toString());
     }
 
     @DeleteMapping("/{id}")

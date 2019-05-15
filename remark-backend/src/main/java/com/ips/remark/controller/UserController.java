@@ -25,6 +25,11 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
+    @GetMapping("isExistUser/{username}")
+    public boolean isExistsUser(@PathVariable("username") String username) {
+        return userService.isExistsUser(username);
+    }
+
     @PostMapping( produces =  {MediaType.APPLICATION_JSON_VALUE},value="/create")
     public ResponseEntity<?> answer(@Valid @RequestBody UserViewModel user){
         try {

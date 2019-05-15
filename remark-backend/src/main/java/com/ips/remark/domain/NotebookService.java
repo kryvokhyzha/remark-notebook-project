@@ -1,10 +1,13 @@
 package com.ips.remark.domain;
 
 import com.ips.remark.Mapper;
+import com.ips.remark.controller.viewModel.NoteViewModel;
 import com.ips.remark.controller.viewModel.NotebookViewModel;
 import com.ips.remark.controller.viewModel.UserViewModel;
+import com.ips.remark.dao.entity.Note;
 import com.ips.remark.dao.entity.Notebook;
 import com.ips.remark.dao.entity.User;
+import com.ips.remark.dao.repository.NoteRepository;
 import com.ips.remark.dao.repository.NotebookRepository;
 import com.ips.remark.dao.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,12 @@ import java.util.stream.Collectors;
 public class NotebookService {
     @Autowired
     NotebookRepository notebookRepository;
+
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    NoteRepository noteRepository;
 
     @Autowired
     Mapper mapper;
@@ -41,6 +48,28 @@ public class NotebookService {
 
     public void delete(String id) {
         this.notebookRepository.deleteById(UUID.fromString(id));
+    }
+
+    public void share(String username, String notebookId) {
+        User user = userRepository.findByUsername(username).get();
+
+        Notebook notebook = notebookRepository.findById(UUID.fromString(notebookId)).get();
+        List<Note> notes = noteRepository.findAllByNotebook(notebook);
+
+        NotebookViewModel viewModel = this.mapper.convertToNotebookViewModel(notebook);
+
+        String id = UUID.randomUUID().toString();
+        viewModel.setId(id);
+        viewModel.setUserId(user.getId().toString());
+
+        this.notebookRepository.save(this.mapper.convertToNotebookEntity(viewModel));
+
+        for (int i = 0; i < notes.size(); i++) {
+            NoteViewModel noteViewModel = this.mapper.convertToNoteViewModel(notes.get(i));
+            noteViewModel.setId(null);
+            noteViewModel.setNotebookId(id);
+            this.noteRepository.save(this.mapper.convertToNoteEntity(noteViewModel));
+        }
     }
 
     public List<NotebookViewModel> byUser(String userId) {

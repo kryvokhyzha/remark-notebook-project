@@ -34,7 +34,7 @@ public class UserService {
         return (user.getId()!=null);
     }
 
-    private boolean isExistsUser(String username)
+    public boolean isExistsUser(String username)
     {
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent();
