@@ -1,33 +1,32 @@
 package com.ips.remark.controller;
 
+import com.ips.remark.domain.NotebookService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.ips.remark.Mapper;
 import com.ips.remark.controller.viewModel.NotebookViewModel;
-import com.ips.remark.dao.repository.NotebookRepository;
 import com.ips.remark.dao.entity.Notebook;
 
 import javax.validation.ValidationException;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 
 @RestController
 @RequestMapping("/api/notebooks")
 @CrossOrigin
 public class NotebookController {
-    private NotebookRepository notebookRepository;
-    private Mapper mapper;
-
-    public NotebookController(NotebookRepository notebookRepository, Mapper mapper) {
-        this.notebookRepository = notebookRepository;
-        this.mapper = mapper;
-    }
+    @Autowired
+    NotebookService notebookService;
 
     @GetMapping("/all")
     public List<Notebook> all() {
-        List<Notebook> allCategories = this.notebookRepository.findAll();
-        return allCategories;
+        return notebookService.all();
+    }
+
+    @GetMapping("/byUser/{userId}")
+    public List<NotebookViewModel> byUser(@PathVariable String userId) {
+        return notebookService.byUser(userId);
     }
 
     @PostMapping
@@ -37,17 +36,19 @@ public class NotebookController {
             throw new ValidationException();
         }
 
-        Notebook notebookEntity = this.mapper.convertToNotebookEntity(notebookViewModel);
+        return notebookService.save(notebookViewModel);
+    }
 
-        // save notebookEntity instance to db
-        this.notebookRepository.save(notebookEntity);
-
-        return notebookEntity;
+    @PostMapping("/share")
+    public void share(@RequestBody Map body) {
+        notebookService.share(body.get("username").toString(), body.get("notebookId").toString());
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable String id) {
-        System.out.println("\n\n\n\n\n\n" + "Notebook id: " + id + "\n\n\n\n\n\n");
-        this.notebookRepository.deleteById(UUID.fromString(id));
+        notebookService.delete(id);
     }
+
+
+
 }

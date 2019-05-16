@@ -1,3 +1,4 @@
+<script src="../app.module.ts"></script>
 <div class="container">
   <!-- Note menu -->
   <div class="row" style="margin-top:12px;">
@@ -5,7 +6,9 @@
       <input type="text"
              class="form-control"
              style="width: 100%;"
-             placeholder="Search notes...">
+             placeholder="Search notes..."
+             [(ngModel)]="searchStr"
+      >
     </div>
     <div class="col-md-4">
       <button type="buton"
@@ -20,7 +23,27 @@
               style="margin-left:12px;"><i class="fa fa-plus"></i> New note
       </button>
     </div>
+  </div>
 
+  <!-- Share menu -->
+  <div class="row" style="margin-top:12px;">
+    <div class="col-md-8">
+      <input type="text"
+             class="form-control"
+             style="width: 100%;"
+             placeholder="Search user by username to share..."
+             [(ngModel)]="searchUsername"
+             [disabled]="selectedNotebook == null"
+      >
+    </div>
+    <div class="col-md-4">
+      <button type="buton"
+              (click)="sharedWithUser()"
+              [disabled]="selectedNotebook == null || searchUsername == null || searchUsername === ''"
+              class="btn btn-info pull-right"
+              style="margin-left:12px;"><i class="fa fa-plus"></i> Shared "{{state}}" notebook
+      </button>
+    </div>
   </div>
 
   <!-- Note content -->
@@ -29,17 +52,21 @@
     <div class="col-md-3">
       <br>
       <div class="list-group list-group-flush">
-        <a (click)="selectNotebook(null)" class="list-group-item list-group-item-action">
-          <i class="fa fa-book"></i>&nbsp;All
+        <a (click)="selectAllNotebook()" class="list-group-item list-group-item-action">
+          <i class="fa fa-book"></i>&nbsp;All notes
+          <i class="fa fa-arrow-right pull-right"></i>
         </a>
-        <!-- Notebook List -->
-        <a *ngFor="let notebook of notebooks" (click)="selectNotebook(notebook)" class="list-group-item list-group-item-action">
-          <i class="fa fa-book"></i>&nbsp;
-          <input [(ngModel)]="notebook.name" (change)="updateNotebook(notebook)" type="text" class="input-label" style="width: 80%"/>
-          <a (click)="deleteNotebook(notebook)" class="pull-right text-danger">
-            <i class="fa fa-trash-o"></i>
-          </a>
+        <a (click)="selectFavNotesNotebook()" class="list-group-item list-group-item-action">
+          <i class="fa fa-book"></i>&nbsp;Favorite notes<i class="fa fa-star pull-right"></i>
         </a>
+<!--         Notebook List -->
+        <app-notebook *ngFor="let n of notebooks"
+                      (click)="selectNotebook(n)"
+                      [notebook]="n"
+                      (notebookDeleted)="deleteNotebook($event)"
+                      (notebookUpdated)="updateNotebook($event)"
+                      class="list-group-item list-group-item-action">
+        </app-notebook>
       </div>
     </div>
 
@@ -48,8 +75,7 @@
       <div class="row">
         <div class="col-md-12">
           <!-- Message if there are no notes -->
-          <h3 *ngIf="selectedNotebook != null">{{ selectedNotebook.name }}</h3>
-          <h3 *ngIf="selectedNotebook == null">All notes</h3>
+          <h3>{{ state }}</h3>
           <div class="alert alert-danger"
                role="alert"
                style="width: 50%;"
@@ -58,33 +84,15 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div *ngIf="this.notes.length != 0" class="row">
         <!-- Note list -->
-        <div *ngFor="let note of notes" class="card bg-warning" style="border: 4px solid white;">
-          <div class="card-body" style="padding: 8px; margin-top: 8px;">
-            <div>
-              <!-- title -->
-              <input type="text"
-                     [(ngModel)]="note.title"
-                     (change)="updateNote(note)"
-                     class="input-label-lg"
-                     maxlength="18"
-                     style="width: 80%"/>
-              <a (click)="deleteNote(note)" class="pull-right text-danger">
-                <i class="fa fa-trash-o"></i>
-              </a>
-            </div>
+        <app-note *ngFor="let n of notes | search: searchStr"
+                  [note]="n"
+                  (noteUpdated)="updateNote($event)"
+                  (noteDeleted)="deleteNote($event)"
+                  (noteSetFavorites)="setFavorite($event)"
+        ></app-note>
 
-            <!-- text -->
-            <textarea class="input-label"
-                      style="width: 100%"
-                      rows="6"
-                      [(ngModel)]="note.text"
-                      (change)="updateNote(note)"
-            ></textarea>
-            <strong class="text-info" style="font-size: small"></strong>
-          </div>
-        </div>
       </div>
     </div>
   </div>

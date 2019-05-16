@@ -9,8 +9,22 @@
 
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item active" *ngIf="checkAuthorized()">
         <a class="nav-link" routerLink="/notes">Notes </a>
+      </li>
+      <li *ngIf="checkAuthorized()">
+      <a class = "nav-link" routerLink="/feedback">Feedback</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav pull-right">
+      <li *ngIf="!checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/registration" >Registration</a>
+      </li>
+      <li *ngIf="!checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/login" >Login</a>
+      </li>
+      <li *ngIf="checkAuthorized()">
+        <a class = "nav-link pull-right" routerLink="/login" (click)="logout()">Logout from {{ getUserUsername() }}</a>
       </li>
     </ul>
   </div>

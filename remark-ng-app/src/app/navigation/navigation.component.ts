@@ -1,4 +1,6 @@
+import { AuthenticationService } from '../authentication/authentication.component';
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navigation',
@@ -6,10 +8,28 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent implements OnInit {
+  constructor(
+              private router: Router,
+              private authService: AuthenticationService) {
+  }
 
-  constructor() { }
 
   ngOnInit() {
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+
+  checkAuthorized() {
+    const checkUser = this.authService.currentUserValue;
+    if (checkUser) {
+      return true;
+    }
+  }
+
+  getUserUsername() {
+    return this.authService.currentUserValue.username;
+  }
 }

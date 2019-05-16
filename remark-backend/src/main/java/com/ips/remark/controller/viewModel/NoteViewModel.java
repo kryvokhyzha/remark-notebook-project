@@ -1,7 +1,5 @@
 package com.ips.remark.controller.viewModel;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -19,6 +17,10 @@ public class NoteViewModel {
     @NotNull
     private String notebookId;
 
+    @NotNull
+    private boolean favorite;
+
+    @NotNull
     private Date lastModifiedOn;
 
     public String getId() {
@@ -45,7 +47,6 @@ public class NoteViewModel {
         this.text = text;
     }
 
-
     public String getNotebookId() {
         return notebookId;
     }
@@ -60,5 +61,13 @@ public class NoteViewModel {
 
     public void setNotebookId(String notebookId) {
         this.notebookId = notebookId;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

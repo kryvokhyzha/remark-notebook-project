@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Notebook } from './model/notebook';
 import { Note } from './model/Note';
 import { ApiService } from '../shared/api.service';
+import { AuthenticationService } from '../authentication/authentication.component';
 
 @Component({
   selector: 'app-notes',
@@ -11,13 +12,17 @@ import { ApiService } from '../shared/api.service';
 export class NotesComponent implements OnInit {
   notebooks: Notebook[] = [];
   notes: Note[] = [];
-  selectedNotebook: Notebook;
+  selectedNotebook: Notebook = null;
+  searchStr = '';
+  state = 'All notes';
+  searchUsername: string;
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService,
+              private authService: AuthenticationService) { }
 
   ngOnInit() {
-    this.getAllNotebooks();
-    this.getAllNotes();
+    this.getAllNotebooksByUser();
+    this.getAllNotesByUser();
   }
 
   public getAllNotebooks() {
@@ -27,6 +32,29 @@ export class NotesComponent implements OnInit {
       },
       err => {
         alert('Error: getAllNotebooks() function');
+      }
+    );
+  }
+
+  public getAllNotebooksByUser() {
+    this.apiService.getNotebooksByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notebooks = res;
+      },
+      err => {
+        alert('Error: getAllNotebooksByUser() function');
+      }
+    );
+  }
+
+  public getAllNotesByUser() {
+    this.notes = [];
+    this.apiService.getNotesByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notes = res;
+      },
+      err => {
+        alert('Error: getAllNotesByUser() function');
       }
     );
   }
@@ -42,10 +70,39 @@ export class NotesComponent implements OnInit {
     );
   }
 
+  public getAllFavoriteNotes() {
+    this.apiService.getFavoriteNotesByUser(this.authService.currentUserValue.id).subscribe(
+      res => {
+        this.notes = res;
+      },
+      err => {
+        alert('Error: getAllFavoriteNotes() function');
+      }
+    );
+  }
+
+  public getFavoriteNotes() {
+    this.apiService.getAllNotes().subscribe(
+      res => {
+        if (res.length !== 0) {
+          this.notes = res.filter(note => {
+            return note.favorite;
+          });
+        } else {
+          this.notes = [];
+        }
+      },
+      err => {
+        alert('Error: getAllNotes() function');
+      }
+    );
+  }
+
   createNotebook() {
     const newNotebook: Notebook = {
       name: 'New notebook',
       id: null,
+      userId: this.authService.currentUserValue.id,
       nbOfNotes: 0
     };
 
@@ -112,12 +169,14 @@ export class NotesComponent implements OnInit {
       title: 'New Note',
       text: 'Write some text in here',
       lastModifiedOn: null,
-      notebookId: nbId
+      notebookId: nbId,
+      favorite: false
     };
 
     this.apiService.saveNote(newNote).subscribe(
       res => {
         newNote.id = res.id;
+        newNote.lastModifiedOn = res.lastModifiedOn;
         this.notes.push(newNote);
       },
       err => {
@@ -129,26 +188,66 @@ export class NotesComponent implements OnInit {
   selectNotebook(notebook: Notebook) {
     this.selectedNotebook = notebook;
 
-    if (this.selectedNotebook == null) {
-      this.getAllNotes();
+    if (notebook == null) {
+      this.selectAllNotebook();
     } else {
+      this.state = notebook.name;
       this.apiService.getNotesByNotebook(notebook.id).subscribe(
         res => {
           this.notes = res;
         },
         err => {
           alert('Error: selectNotebook(notebook: Notebook) function');
-        }
-      );
+        });
     }
   }
 
   updateNote(updatedNote: Note) {
     this.apiService.saveNote(updatedNote).subscribe(
       res => {
+        const idx = this.notes.indexOf(updatedNote);
+        this.notes[idx].lastModifiedOn = res.lastModifiedOn;
       },
       err => {
         alert('Error: updateNote(updatedNote: Note) function');
+      }
+    );
+  }
+
+  setFavorite(note: Note) {
+    note.favorite = !note.favorite;
+    this.updateNote(note);
+  }
+
+  selectAllNotebook() {
+    this.selectedNotebook = null;
+    this.state = 'All notes';
+    this.getAllNotesByUser();
+    // this.getAllNotes();
+  }
+
+  selectFavNotesNotebook() {
+    this.selectedNotebook = null;
+    this.state = 'Favorite notes';
+    this.getAllFavoriteNotes();
+    // this.getFavoriteNotes();
+  }
+
+  sharedWithUser() {
+    this.apiService.getUserIsExist(this.searchUsername).subscribe(
+      res => {
+        if (res === true) {
+          this.apiService.postShareNotebook(this.searchUsername, this.selectedNotebook.id).subscribe(
+            resp => {
+            },
+            error => {
+              alert('Error: postShareNotebook() function ' + this.searchUsername + ' ' + this.selectedNotebook.id);
+            }
+          );
+        }
+      },
+      err => {
+        alert('Error: sharedWithUser() function');
       }
     );
   }
