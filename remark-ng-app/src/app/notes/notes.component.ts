@@ -239,6 +239,7 @@ export class NotesComponent implements OnInit {
         if (res === true) {
           this.apiService.postShareNotebook(this.searchUsername, this.selectedNotebook.id).subscribe(
             resp => {
+              alert('Notebook ' + this.selectedNotebook.name + ' was shared with ' + this.searchUsername + ' successfully');
             },
             error => {
               alert('Error: postShareNotebook() function ' + this.searchUsername + ' ' + this.selectedNotebook.id);
