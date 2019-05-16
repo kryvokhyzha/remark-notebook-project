@@ -12,16 +12,6 @@ import com.ips.remark.dao.entity.Notebook;
 
 import java.util.UUID;
 
-/**
- * Component that handles all mappings in this project
- * - entity to view model
- * - view model to entity
- * <p>
- * All mappings are handled here, but in production code this is not the
- * best approach. You can take a look at ModelMapper project or at least split mapping classes
- * across many files.
- */
-
 @Component
 public class Mapper {
     private NotebookRepository notebookRepository;
@@ -60,9 +50,6 @@ public class Mapper {
     }
 
     public Notebook convertToNotebookEntity(NotebookViewModel viewModel) {
-        System.out.println(viewModel.getUserId());
-        System.out.println(viewModel.getName());
-        System.out.println(viewModel.getId());
         User user = this.userRepository.findById(UUID.fromString(viewModel.getUserId())).get();
         return new Notebook(viewModel.getId(), viewModel.getName(), user);
     }

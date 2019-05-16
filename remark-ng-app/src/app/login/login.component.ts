@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators/';
+import {ApiService} from '../shared/api.service';
 
 import { AuthenticationService } from '../authentication/authentication.component';
 import {UserModel} from '../models/user';
@@ -20,7 +21,8 @@ export class LoginComponent {
   private password = '';
   public error = '';
 
-  constructor(private router: Router, private authService: AuthenticationService) { }
+  constructor(private router: Router, private authService: AuthenticationService, private apiService: ApiService) {
+  }
 
   onSubmit() {
     this.authService.login(this.username, this.password).pipe(first()).subscribe(res => {
@@ -34,5 +36,4 @@ export class LoginComponent {
       }
     );
   }
-
 }

@@ -10,7 +10,7 @@ import {not} from 'rxjs/internal-compatibility';
   providedIn: 'root'
 })
 export class ApiService {
-  private BASE_URL = 'http://localhost:8081/api';
+  private BASE_URL = 'http://localhost:8083/api';
   private ALL_NOTEBOOKS_URL = `${this.BASE_URL}\\notebooks\\all`;
   private SAVE_UPDATE_NOTEBOOK_URL = `${this.BASE_URL}\\notebooks`;
   private DELETE_NOTEBOOK_URL = `${this.BASE_URL}\\notebooks\\`;
@@ -26,12 +26,17 @@ export class ApiService {
   private FAVORITE_NOTES_BY_USER_URL = `${this.BASE_URL}\\notes\\favoriteByUser\\`;
   private USER_IS_EXIST_URL = `${this.BASE_URL}\\user\\isExistUser\\`;
   private SHARED_NOTEBOOK_URL = `${this.BASE_URL}\\notebooks\\share`;
+  private GET_HASH_URL = `${this.BASE_URL}\\user\\getHash\\`;
 
   constructor(private http: HttpClient) {
   }
 
   getNotebooksByUser(userId: string): Observable<Notebook[]> {
     return this.http.get<Notebook[]>(this.NOTEBOOKS_BY_USER_URL + userId);
+  }
+
+  getHash(password: string, resPassword: string): Observable<boolean> {
+    return this.http.get<boolean>(this.GET_HASH_URL + password + `\\` + resPassword);
   }
 
   getNotesByUser(userId: string): Observable<Note[]> {

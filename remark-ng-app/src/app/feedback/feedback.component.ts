@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { AuthenticationService } from '../authentication/authentication.component';
 
 @Component({
   selector: 'app-feedback',
@@ -12,14 +13,16 @@ export class FeedbackComponent implements OnInit {
     email: '',
     feedback: ''
   };
-  constructor(private http: HttpClient) {
+  username = this.auth.currentUserValue.username;
+
+  constructor(private http: HttpClient, private auth: AuthenticationService) {
   }
 
   ngOnInit() {
 
   }
   sendFeedback(): void {
-    const url = 'http://localhost:8081/api/feedback';
+    const url = 'http://localhost:8083/api/feedback';
     this.http.post(url, this.model).subscribe(
       res => {
         location.reload();

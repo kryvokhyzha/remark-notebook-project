@@ -11,6 +11,7 @@ import java.util.UUID;
 @Table(name = "notebook")
 public class Notebook {
     @Id
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column()

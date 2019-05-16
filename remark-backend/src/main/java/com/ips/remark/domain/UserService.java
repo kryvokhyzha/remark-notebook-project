@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import javax.naming.OperationNotSupportedException;
 import java.util.Optional;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+//    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void User(UserViewModel userViewModel) throws Exception
     {
@@ -22,6 +26,14 @@ public class UserService {
         boolean newUser = createUser(userViewModel);
         if(!newUser) throw new OperationNotSupportedException("Some troubles occurred.");
     }
+
+//    public boolean getHash(String password, String resPassword) {
+//        String str = passwordEncoder.encode(password);
+//        System.out.println(password);
+//        System.out.println(str);
+//        System.out.println(resPassword);
+//        return passwordEncoder.matches(password, resPassword);
+//    }
 
     private boolean createUser(UserViewModel userViewModel)
     {

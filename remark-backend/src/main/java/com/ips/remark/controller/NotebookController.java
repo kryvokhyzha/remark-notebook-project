@@ -41,8 +41,6 @@ public class NotebookController {
 
     @PostMapping("/share")
     public void share(@RequestBody Map body) {
-        System.out.println("\n" + body.get("username"));
-        System.out.println("\n" + body.get("notebookId"));
         notebookService.share(body.get("username").toString(), body.get("notebookId").toString());
     }
 

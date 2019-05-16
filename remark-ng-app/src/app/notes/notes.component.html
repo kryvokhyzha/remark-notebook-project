@@ -39,7 +39,7 @@
     <div class="col-md-4">
       <button type="buton"
               (click)="sharedWithUser()"
-              [disabled]="selectedNotebook == null"
+              [disabled]="selectedNotebook == null || searchUsername == null || searchUsername === ''"
               class="btn btn-info pull-right"
               style="margin-left:12px;"><i class="fa fa-plus"></i> Shared "{{state}}" notebook
       </button>

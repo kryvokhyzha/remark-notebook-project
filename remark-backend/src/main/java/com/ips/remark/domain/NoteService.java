@@ -56,6 +56,10 @@ public class NoteService {
             }
         }
 
+        if (notes.isEmpty()) {
+            return new ArrayList<NoteViewModel>();
+        }
+
         return notes.stream()
                 .map(note -> this.mapper.convertToNoteViewModel(note))
                 .collect(Collectors.toList());

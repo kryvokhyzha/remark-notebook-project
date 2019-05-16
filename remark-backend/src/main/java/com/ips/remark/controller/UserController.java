@@ -30,6 +30,11 @@ public class UserController {
         return userService.isExistsUser(username);
     }
 
+//    @GetMapping("/getHash/{password}/{resPassword}")
+//    public boolean getHash(@PathVariable String password, @PathVariable String resPassword) {
+//        return userService.getHash(password, resPassword);
+//    }
+
     @PostMapping( produces =  {MediaType.APPLICATION_JSON_VALUE},value="/create")
     public ResponseEntity<?> answer(@Valid @RequestBody UserViewModel user){
         try {

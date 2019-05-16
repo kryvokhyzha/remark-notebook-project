@@ -18,6 +18,7 @@ export class RegistrationComponent implements OnInit {
   public error = '';
   private firstChange = false;
   private secondChange = false;
+  private check = false;
   constructor(private router: Router, private authService: AuthenticationService, private apiService: ApiService) { }
 
   ngOnInit() {
@@ -38,7 +39,7 @@ export class RegistrationComponent implements OnInit {
     );
   }
   checkPasswordConfirm() {
-    if (this.password !== this.passwordConfirm) {
+    if (this.password !== this.passwordConfirm || this.password == null || this.password === '' || this.passwordConfirm == null || this.passwordConfirm === '') {
        return false;
     }
     return true;
@@ -50,5 +51,14 @@ export class RegistrationComponent implements OnInit {
 
   checkChangeSecond() {
     this.secondChange = true;
+  }
+  public checkUser() {
+    this.apiService.getUserIsExist(this.username).subscribe(
+      res => {
+        this.check = res;
+      },
+      err => {
+      }
+    );
   }
 }

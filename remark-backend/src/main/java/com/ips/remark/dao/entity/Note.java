@@ -8,6 +8,7 @@ import java.util.UUID;
 @Table(name = "note")
 public class Note {
     @Id
+    @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
     @Column()
