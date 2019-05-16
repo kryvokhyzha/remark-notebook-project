@@ -12,20 +12,40 @@ import { Router, RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { LoginComponent } from './login/login.component';
+
+import { AuthGuard } from './security_redirect/loginRedirect';
+import { SearchPipe } from './search.pipe';
+import { NoteComponent } from './notes/note/note.component';
+import { NotebookComponent } from './notes/notebook/notebook.component';
+import { IsAuthGuard } from './security_redirect/isLoginRedirect';
+import { RegistrationComponent } from './registration/registration.component';
 
 const appRoutes: Routes = [
   {
     path: 'notes',
-    component: NotesComponent
+    component: NotesComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'feedback',
-    component: FeedbackComponent
+    component: FeedbackComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '',
     component: NotesComponent,
     pathMatch: 'full',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [IsAuthGuard]
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent,
   },
   {
     path: '**',
@@ -40,7 +60,12 @@ const appRoutes: Routes = [
     FeedbackComponent,
     NotesComponent,
     NotFoundComponent,
-    FeedbackComponent
+    FeedbackComponent,
+    LoginComponent,
+    RegistrationComponent,
+    SearchPipe,
+    NoteComponent,
+    NotebookComponent,
   ],
   imports: [
     BrowserModule,

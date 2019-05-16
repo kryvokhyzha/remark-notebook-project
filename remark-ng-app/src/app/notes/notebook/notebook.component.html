@@ -1,0 +1,5 @@
+<i class="fa fa-book"></i>&nbsp;
+<input [(ngModel)]="notebook.name" (change)="updateNotebook()" type="text" class="input-label" style="width: 80%"/>
+<a (click)="deleteNotebook()" class="pull-right text-danger">
+  <i class="fa fa-trash-o"></i>
+</a>

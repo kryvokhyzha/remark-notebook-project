@@ -28,6 +28,8 @@ HELP.md
 ### VS Code ###
 .vscode/
 
+### our ignore ###
 node_modules
+target
 *.db
 *.orig
