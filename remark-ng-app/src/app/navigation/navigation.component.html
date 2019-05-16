@@ -17,6 +17,9 @@
       </li>
     </ul>
     <ul class="navbar-nav pull-right">
+      <li>
+        <a class="nav-link pull-right" routerLink="/help">Help</a>
+      </li>
       <li *ngIf="!checkAuthorized()">
         <a class = "nav-link pull-right" routerLink="/registration" >Registration</a>
       </li>
