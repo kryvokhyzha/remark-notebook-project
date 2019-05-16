@@ -20,6 +20,7 @@ import { NoteComponent } from './notes/note/note.component';
 import { NotebookComponent } from './notes/notebook/notebook.component';
 import { IsAuthGuard } from './security_redirect/isLoginRedirect';
 import { RegistrationComponent } from './registration/registration.component';
+import { HelpComponent } from './help/help.component';
 
 const appRoutes: Routes = [
   {
@@ -45,7 +46,11 @@ const appRoutes: Routes = [
   },
   {
     path: 'registration',
-    component: RegistrationComponent,
+    component: RegistrationComponent
+  },
+  {
+    path: 'help',
+    component: HelpComponent
   },
   {
     path: '**',
@@ -66,6 +71,7 @@ const appRoutes: Routes = [
     SearchPipe,
     NoteComponent,
     NotebookComponent,
+    HelpComponent,
   ],
   imports: [
     BrowserModule,

@@ -30,7 +30,7 @@
                  placeholder="Your email"
                  [(ngModel)]="model.email"
                  #email="ngModel"
-                 [ngClass]="{ 'is-valid': f.submitted && email.invalid}"
+                 [ngClass]="{ 'is-invalid': f.submitted && email.invalid}"
                  required email
                  />
           <div *ngIf="f.submitted && email.invalid" class="invalid-input">
@@ -50,7 +50,7 @@
             rows="10"
             [(ngModel)]="model.feedback"
             #feedback="ngModel"
-            [ngClass]="{ 'is-valid': f.submitted && feedback.invalid}"
+            [ngClass]="{ 'is-invalid': f.submitted && feedback.invalid}"
             required minlength="10"
             >
 			    </textarea>
